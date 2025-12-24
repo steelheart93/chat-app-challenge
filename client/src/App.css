@@ -7,15 +7,26 @@
   --border-color: #444;
 }
 
+/* 1. RESET Y CONFIGURACIÓN BASE OBLIGATORIA */
+html,
 body {
   margin: 0;
-  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background-color: var(--bg);
-  color: var(--text);
-  height: 100vh;
-  display: flex;
+  font-family: "Inter", system-ui, sans-serif;
+  overflow: hidden; /* Evita scroll en el body principal */
+}
+
+/* 2. EL CULPABLE HABITUAL: EL CONTENEDOR #root DE REACT */
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex; /* Hacemos que el root también centre su contenido */
   justify-content: center;
-  align-items: center; /* Centra verticalmente en escritorio */
+  align-items: center;
+  color: var(--text);
 }
 
 /* =========================================
@@ -25,10 +36,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  height: 100%;
 }
 
 .login-card {
@@ -39,17 +48,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  width: 100%;
-  max-width: 420px; /* Ancho máximo elegante para el login */
+  width: 90%;
+  max-width: 400px;
   text-align: center;
 }
 
 .login-card h1 {
   margin: 0 0 1rem 0;
-  font-weight: 700;
 }
 
-/* Inputs y Botones Generales */
 input {
   padding: 14px;
   border-radius: 10px;
@@ -58,9 +65,8 @@ input {
   color: var(--text);
   outline: none;
   font-size: 1rem;
-  transition: border-color 0.2s;
   width: 100%;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Vital para que el padding no rompa el ancho */
 }
 
 input:focus {
@@ -76,107 +82,77 @@ button {
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  transition: background-color 0.2s, transform 0.1s;
   width: 100%;
+  transition: 0.2s;
 }
 
 button:hover {
   background-color: #357abd;
 }
 
-button:active {
-  transform: scale(0.98);
-}
-
 /* =========================================
    PANTALLA DEL CHAT
    ========================================= */
 
-/* ESTILOS BASE (MÓVIL) - Pantalla completa */
+/* Estilos por defecto (Mobile First) */
 .chat-container {
   display: flex;
   flex-direction: column;
   background: var(--card-bg);
-  width: 100%;
-  height: 100vh; /* Ocupa toda la altura en móvil */
+  width: 100%; /* Full width en móvil */
+  height: 100%; /* Full height en móvil */
   box-shadow: none;
   border-radius: 0;
 }
 
-/* ESTILOS ESCRITORIO (Media Query) */
+/* Estilos Escritorio (Solo aplica si la pantalla mide más de 768px) */
 @media (min-width: 768px) {
-  body {
-    align-items: center; /* Asegura centrado vertical */
-  }
-
   .chat-container {
-    width: 95%; /* Un poco más ancho */
-    max-width: 1000px; /* Ancho máximo más generoso para laptops */
-    height: 90vh; /* Altura fija para que "flote" */
+    width: 90%; /* 90% del ancho disponible */
+    max-width: 950px; /* Pero no más de 950px */
+    height: 85vh; /* 85% de la altura de la pantalla */
+    max-height: 800px;
+    border-radius: 20px; /* Bordes redondeados */
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    border-radius: 24px; /* Bordes más redondeados */
-    overflow: hidden; /* Importante para los hijos */
     border: 1px solid var(--border-color);
-  }
-
-  .chat-header,
-  .chat-footer {
-    padding: 1.2rem 1.5rem; /* Más espacio en desktop */
-  }
-
-  .chat-body {
-    padding: 1.5rem;
+    overflow: hidden; /* Para contener a los hijos */
   }
 }
 
-/* Header */
 .chat-header {
-  padding: 1rem;
-  background: rgba(35, 35, 35, 0.95); /* Un poco de transparencia */
-  backdrop-filter: blur(10px); /* Efecto moderno */
+  padding: 1rem 1.5rem;
+  background: rgba(35, 35, 35, 0.95);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10;
-}
-
-.chat-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
 }
 
 .status-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: #2ecc71;
   border-radius: 50%;
   box-shadow: 0 0 8px #2ecc71;
 }
 
-/* Cuerpo del Chat */
 .chat-body {
-  flex: 1; /* Ocupa todo el espacio disponible */
+  flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 12px;
   background-color: var(--card-bg);
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: var(--border-color) transparent;
 }
 
-/* Scrollbar personalizado para Webkit (Chrome, Safari) */
+/* Scrollbar bonito */
 .chat-body::-webkit-scrollbar {
-  width: 8px;
-}
-.chat-body::-webkit-scrollbar-track {
-  background: transparent;
+  width: 6px;
 }
 .chat-body::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
-  border-radius: 20px;
+  background: #555;
+  border-radius: 10px;
 }
 
 /* Mensajes */
@@ -184,36 +160,33 @@ button:active {
   display: flex;
   width: 100%;
 }
-
 .my-message {
   justify-content: flex-end;
 }
-
 .other-message {
   justify-content: flex-start;
 }
 
 .message-content {
-  max-width: 75%; /* Un poco más ancho */
+  max-width: 70%;
   padding: 12px 16px;
-  border-radius: 18px;
+  border-radius: 14px;
   position: relative;
   font-size: 0.95rem;
   line-height: 1.4;
   word-wrap: break-word;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .my-message .message-content {
   background: var(--primary);
   color: white;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 2px;
 }
 
 .other-message .message-content {
   background: var(--input-bg);
   border: 1px solid var(--border-color);
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 2px;
 }
 
 .sender-name {
@@ -221,42 +194,26 @@ button:active {
   font-size: 0.75rem;
   opacity: 0.7;
   margin-bottom: 4px;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .time {
   font-size: 0.65rem;
   opacity: 0.6;
   float: right;
-  margin-left: 12px;
-  margin-top: 8px;
+  margin-left: 10px;
+  margin-top: 6px;
 }
 
-/* Footer */
 .chat-footer {
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   background: rgba(35, 35, 35, 0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid var(--border-color);
   display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.chat-footer input {
-  flex: 1;
-  border-radius: 24px; /* Input más redondeado en el chat */
-  padding: 12px 18px;
+  gap: 10px;
 }
 
 .chat-footer button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* Botón de enviar redondo */
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  flex-shrink: 0; /* Evita que se aplaste */
+  width: auto; /* El botón de enviar no debe ser width 100% */
+  padding: 0 20px;
 }
