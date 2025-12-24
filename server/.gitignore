@@ -1,0 +1,37 @@
+# Dependencias (Nunca subir esto, pesa demasiado)
+node_modules/
+
+# Logs del sistema y de npm
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables de entorno (SEGURIDAD CRÍTICA: Aquí va tu URI de Mongo)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# Archivos de construcción de producción (Frontend - Vite genera 'dist')
+dist/
+dist-ssr/
+build/
+out/
+
+# Archivos de sistema operativo (Basura que no debe ir al repo)
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.sw?
