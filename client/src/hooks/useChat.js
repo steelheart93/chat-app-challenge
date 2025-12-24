@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-// Cambia esto por tu URL de backend desplegado luego
+// Asegúrate que este puerto coincida con el que definiste en el servidor (3001)
 const socket = io.connect("http://localhost:3001");
 
 export const useChat = () => {
@@ -11,16 +11,24 @@ export const useChat = () => {
   const [isJoined, setIsJoined] = useState(false);
 
   useEffect(() => {
+    // Escuchar mensajes nuevos
     socket.on("receive_message", (data) => {
-      setMessages((prev) => [...prev, data]);
+      // IMPORTANTE: Usar la función de callback de setMessages para asegurar
+      // que siempre tenemos el estado anterior más reciente.
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
+    // Cargar historial
     socket.on("load_history", (history) => {
       setMessages(history);
     });
 
-    return () => socket.off();
-  }, []);
+    // Limpieza de eventos al desmontar
+    return () => {
+      socket.off("receive_message");
+      socket.off("load_history");
+    };
+  }, []); // El array vacío asegura que esto solo se ejecute una vez al montar el hook
 
   const joinRoom = (user, roomName) => {
     if (user && roomName) {
@@ -28,17 +36,20 @@ export const useChat = () => {
       setRoom(roomName);
       socket.emit("join_room", roomName);
       setIsJoined(true);
+      // Limpiamos los mensajes al cambiar de sala para que no se mezclen
+      setMessages([]);
     }
   };
 
   const sendMessage = (text) => {
-    if (text.trim()) {
+    if (text.trim() && room && username) {
       const messageData = {
         room,
         user: username,
         text,
-        time: new Date(),
+        time: new Date(), // Usar una fecha real
       };
+      // Enviamos al servidor. El servidor lo retransmitirá y lo recibiremos en 'receive_message'
       socket.emit("send_message", messageData);
     }
   };
